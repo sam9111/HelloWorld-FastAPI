@@ -1,13 +1,11 @@
 import json
 import os
 from datetime import datetime
-import re
 
+import text2emotion as te
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from newscatcherapi import NewsCatcherApiClient
-import text2emotion as te
-from pprint import pprint
 
 load_dotenv()
 
