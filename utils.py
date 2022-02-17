@@ -1,11 +1,12 @@
+from hashlib import new
 import json
 import os
 from datetime import datetime
 
+import text2emotion as te
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from newscatcherapi import NewsCatcherApiClient
-import text2emotion as te
 
 load_dotenv()
 
@@ -69,7 +70,11 @@ def make_data():
     news_json = get_news()
     news_by_country = news_json["countries"]
     to_be_deleted = []
-    new_obj = {"countries": {}}
+    new_obj = {
+        "countries": {},
+        "last_fetched": news_json["last_fetched"],
+        "total_countries": 0,
+    }
     for country in news_by_country:
         articles = news_by_country[country]["articles"]
         articles_list = []
@@ -85,6 +90,7 @@ def make_data():
             "articles": articles_list,
             "total": len(articles_list),
         }
+    new_obj["total_countries"] = len(new_obj["countries"])
     return new_obj
 
 
