@@ -2,10 +2,10 @@ import json
 import os
 from datetime import datetime
 
-import text2emotion as te
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from newscatcherapi import NewsCatcherApiClient
+import text2emotion as te
 
 load_dotenv()
 
@@ -71,21 +71,20 @@ def make_data():
     to_be_deleted = []
     new_obj = {"countries": {}}
     for country in news_by_country:
-
         articles = news_by_country[country]["articles"]
-        emotions = []
+        articles_list = []
         for article_id in articles:
             article_obj = articles[article_id]
             text = article_obj["title"]
             emotion_list = process_text(text)
             if not emotion_list:
                 continue
-            emotion_list.append(article_id)
-            emotions.append(emotion_list)
-        emotions.sort(key=lambda x: x[1], reverse=True)
-        articles[emotions[0][2]]["top_emotion"] = emotions[0][0]
-        new_obj["countries"][country] = {"article": {}}
-        new_obj["countries"][country]["article"] = articles[emotions[0][2]]
+            article_obj["emotion"] = emotion_list[0]
+            articles_list.append(article_obj)
+        new_obj["countries"][country] = {
+            "articles": articles_list,
+            "total": len(articles_list),
+        }
     return new_obj
 
 
