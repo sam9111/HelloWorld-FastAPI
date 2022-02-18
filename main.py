@@ -17,11 +17,16 @@ app.add_middleware(
 )
 
 
+@app.get("/api/news")  # unprocessed news
+def news():
+    return get_news()
+
+
 @app.get("/api/data")
 def data():
     return get_data()
 
 
-@app.get("/api/news")  # unprocessed news
-def news():
-    return get_news()
+@app.get("/api/points")
+def labels():
+    return get_points()

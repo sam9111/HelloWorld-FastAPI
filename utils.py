@@ -69,7 +69,6 @@ def process_text(text):
 def make_data():
     news_json = get_news()
     news_by_country = news_json["countries"]
-    to_be_deleted = []
     new_obj = {
         "countries": {},
         "last_fetched": news_json["last_fetched"],
@@ -103,3 +102,45 @@ def get_data():
     with open("data.json", "r") as infile:
         data_json = json.load(infile)
     return data_json
+
+
+EMOJIS = {
+    "Angry": "&#x1f621",
+    "Fear": "&#x1f630",
+    "Happy": "&#x1f60a",
+    "Sad": "&#x1f622",
+    "Surprise": "&#x1f632",
+}
+
+
+def make_points():
+    data = get_data()
+
+    data_by_country = data["countries"]
+
+    with open("countries.json", "r") as infile:
+        point_objs = json.load(infile)
+
+    for point_obj in list(point_objs):
+        country = point_obj["country_code"]
+        if country not in data_by_country:
+            point_objs.remove(point_obj)
+            continue
+
+        emotion = data_by_country[country]["articles"][0]["emotion"]
+        emoji = EMOJIS[emotion]
+        point_obj["emoji"] = emoji
+
+    return point_objs
+
+
+def update_points():
+    with open("points.json", "w") as outfile:
+        json.dump(make_points(), outfile)
+
+
+def get_points():
+    update_points()
+    with open("points.json", "r") as infile:
+        points_json = json.load(infile)
+    return points_json
