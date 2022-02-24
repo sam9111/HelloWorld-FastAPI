@@ -166,7 +166,7 @@ def make_points():
         point_objs = json.load(infile)
 
     for point_obj in list(point_objs):
-        country = point_obj["country_code"]
+        country = point_obj["id"]
         if country not in data_by_country:
             point_objs.remove(point_obj)
             continue
@@ -175,7 +175,7 @@ def make_points():
             "green" if data_by_country[country]["sentiment"] == "positive" else "red"
         )
 
-        point_obj["size"] = data_by_country[country]["sentiment_score"]
+        point_obj["value"] = data_by_country[country]["sentiment_score"]
 
         point_obj["sentiment"] = data_by_country[country]["sentiment"]
 
