@@ -25,8 +25,3 @@ def news():
 @app.get("/api/data")
 def data():
     return get_data()
-
-
-@app.get("/api/points")
-def labels():
-    return get_points()
