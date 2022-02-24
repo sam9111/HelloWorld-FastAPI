@@ -175,7 +175,7 @@ def make_points():
             "green" if data_by_country[country]["sentiment"] == "positive" else "red"
         )
 
-        point_obj["value"] = data_by_country[country]["sentiment_score"]
+        point_obj["value"] = data_by_country[country]["sentiment_score"] * 100
 
         point_obj["sentiment"] = data_by_country[country]["sentiment"]
 
