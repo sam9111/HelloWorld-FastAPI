@@ -5,7 +5,6 @@ from datetime import datetime
 import pytz
 import text2emotion as te
 from dotenv import load_dotenv
-from fastapi.middleware.cors import CORSMiddleware
 from newscatcherapi import NewsCatcherApiClient
 
 load_dotenv()
@@ -82,7 +81,7 @@ def get_news():
     return news_json
 
 
-# Processing news to make point data
+# Process news to make data with overall sentiments and emoticons for each article
 
 EMOJIS = {
     "Angry": "&#x1f621",
@@ -104,7 +103,8 @@ def get_emotion(text):
 def make_data():
     news = get_news()
     news_by_country = news["countries"]
-    countries_to_delete = []
+    countries = {}
+
     for country in news_by_country:
         documents = []
         for article in news_by_country[country]["articles"]:
@@ -125,7 +125,6 @@ def make_data():
                 negatives.append(sentiment_score)
 
         if len(positives) == 0 and len(negatives) == 0:
-            countries_to_delete.append(country)
             continue
         avg_positive_score = 0
         avg_negative_score = 0
@@ -141,9 +140,8 @@ def make_data():
             news_by_country[country]["sentiment"] = "negative"
             news_by_country[country]["sentiment_score"] = avg_negative_score
 
-    countries = [
-        news_by_country[x] for x in news_by_country if x not in countries_to_delete
-    ]
+        countries[country] = news_by_country[country]
+
     news["countries"] = countries
     return news
 
@@ -159,34 +157,35 @@ def get_data():
     return data_json
 
 
-# def make_points():
-#     data = get_data()
+def make_points():
+    data = get_data()
 
-#     data_by_country = data["countries"]
+    data_by_country = data["countries"]
 
-#     with open("countries.json", "r") as infile:
-#         point_objs = json.load(infile)
+    with open("countries.json", "r") as infile:
+        point_objs = json.load(infile)
 
-#     for point_obj in list(point_objs):
-#         country = point_obj["country_code"]
-#         if country not in data_by_country:
-#             point_objs.remove(point_obj)
-#             continue
+    for point_obj in list(point_objs):
+        country = point_obj["id"]
+        if country not in data_by_country:
+            point_objs.remove(point_obj)
+            continue
 
-#         emotion = data_by_country[country]["articles"][0]["emotion"]
-#         emoji = EMOJIS[emotion]
-#         point_obj["emoji"] = emoji
+        point_obj["color"] = (
+            "green" if data_by_country[country]["sentiment"] == "positive" else "red"
+        )
 
-#     return point_objs
+        point_obj["value"] = data_by_country[country]["sentiment_score"]
 
-
-# def update_points():
-#     with open("points.json", "w") as outfile:
-#         json.dump(make_points(), outfile)
+    return point_objs
 
 
-# def get_points():
-#     update_points()
-#     with open("points.json", "r") as infile:
-#         points_json = json.load(infile)
-#     return points_json
+def update_points():
+    with open("points.json", "w") as outfile:
+        json.dump(make_points(), outfile)
+
+
+def get_points():
+    with open("points.json", "r") as infile:
+        points_json = json.load(infile)
+    return points_json
