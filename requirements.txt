@@ -12,8 +12,6 @@ autopep8==1.6.0
 azure-ai-textanalytics==5.1.0
 azure-common==1.1.28
 azure-core==1.22.1
-azure-identity==1.7.1
-azure-keyvault-secrets==4.3.0
 bcrypt==3.2.0
 beautifulsoup4==4.9.3
 binaryornot==0.4.4
@@ -47,6 +45,7 @@ frozenlist==1.2.0
 graphene==2.1.9
 graphql-core==2.3.2
 graphql-relay==2.0.1
+gunicorn==20.1.0
 h11==0.9.0
 httptools==0.1.2
 idna==2.10
@@ -98,7 +97,6 @@ SQLAlchemy==1.4.31
 sqlparse==0.4.2
 starlette==0.13.6
 text-unidecode==1.3
-text2emotion==0.0.5
 textblob==0.17.1
 texttable==1.6.4
 toml==0.10.2
@@ -113,4 +111,3 @@ virtualenv==20.13.0
 websocket-client==0.59.0
 websockets==8.1
 yarl==1.7.2
-gunicorn==20.0.4
