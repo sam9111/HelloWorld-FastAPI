@@ -133,7 +133,6 @@ def update_data():
 
 
 def get_data():
-    update_data()
     with open("data.json", "r") as infile:
         data_json = json.load(infile)
     return data_json
