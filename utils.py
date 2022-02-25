@@ -10,9 +10,7 @@ load_dotenv()
 
 UTC = pytz.utc
 
-newscatcherapi = NewsCatcherApiClient(
-    x_api_key=os.getenv("API_KEY")
-)  # use 10,000 calls account in production
+newscatcherapi = NewsCatcherApiClient(x_api_key=os.getenv("API_KEY"))
 
 # Azure Text Analytics Setup
 key = os.getenv("AZURE_API_KEY")
@@ -67,9 +65,7 @@ def make_news(response):
 
 
 def update_news():
-    response = newscatcherapi.get_latest_headlines_all_pages(
-        lang="en", when="24h", max_page=1  # remove in production
-    )
+    response = newscatcherapi.get_latest_headlines_all_pages(lang="en", when="24h")
     with open("news.json", "w") as outfile:
         json.dump(make_news(response), outfile)
 
