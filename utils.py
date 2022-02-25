@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 
 import pytz
-import text2emotion as te
 from dotenv import load_dotenv
 from newscatcherapi import NewsCatcherApiClient
 
@@ -81,23 +80,7 @@ def get_news():
     return news_json
 
 
-# Process news to make data with overall sentiments and emoticons for each article
-
-EMOJIS = {
-    "Angry": "&#x1f621",
-    "Fear": "&#x1f630",
-    "Happy": "&#x1f60a",
-    "Sad": "&#x1f622",
-    "Surprise": "&#x1f632",
-}
-
-
-def get_emotion(text):
-    emotion_obj = te.get_emotion(text)
-    emotion_list = sorted(emotion_obj.items(), key=lambda item: item[1], reverse=True)
-    if all(value == 0 for value in emotion_list):
-        return False
-    return EMOJIS[list(emotion_list[0])[0]]
+# Process news to make data with overall sentiments and emotions for each article
 
 
 def make_data():
@@ -109,7 +92,6 @@ def make_data():
         documents = []
         for article in news_by_country[country]["articles"]:
             documents.append(article["title"])
-            article["emoticon"] = get_emotion(article["title"])
         responses = client.analyze_sentiment(documents=documents)
         positives = []
         negatives = []
@@ -139,7 +121,6 @@ def make_data():
         else:
             news_by_country[country]["sentiment"] = "negative"
             news_by_country[country]["sentiment_score"] = avg_negative_score
-
         countries[country] = news_by_country[country]
 
     news["countries"] = countries
@@ -152,6 +133,7 @@ def update_data():
 
 
 def get_data():
+    update_data()
     with open("data.json", "r") as infile:
         data_json = json.load(infile)
     return data_json
