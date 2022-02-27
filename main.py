@@ -1,9 +1,9 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import asyncio
-from utils import *
 from loguru import logger
-from apscheduler.schedulers.background import BackgroundScheduler
+
+from utils import *
 
 app = FastAPI()
 
@@ -39,6 +39,7 @@ def update():
     logger.info("Finished updating points")
 
 
+# run updates every 23 hours
 @app.on_event("startup")
 def update_loop():
     scheduler = BackgroundScheduler()

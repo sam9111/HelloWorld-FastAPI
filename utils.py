@@ -10,6 +10,7 @@ load_dotenv()
 
 UTC = pytz.utc
 
+# NewsCatcherAPI setup
 newscatcherapi = NewsCatcherApiClient(x_api_key=os.getenv("API_KEY"))
 
 # Azure Text Analytics Setup
@@ -66,17 +67,17 @@ def make_news(response):
 
 def update_news():
     response = newscatcherapi.get_latest_headlines_all_pages(lang="en", when="24h")
-    with open("news.json", "w") as outfile:
+    with open("./data/news.json", "w") as outfile:
         json.dump(make_news(response), outfile)
 
 
 def get_news():
-    with open("news.json", "r") as infile:
+    with open("./data/news.json", "r") as infile:
         news_json = json.load(infile)
     return news_json
 
 
-# Process news to make data with overall sentiments and emotions for each article
+# Process news to calculate average sentiments for articles of each country
 
 
 def make_data():
@@ -124,14 +125,17 @@ def make_data():
 
 
 def update_data():
-    with open("data.json", "w") as outfile:
+    with open("./data/data.json", "w") as outfile:
         json.dump(make_data(), outfile)
 
 
 def get_data():
-    with open("data.json", "r") as infile:
+    with open("./data/data.json", "r") as infile:
         data_json = json.load(infile)
     return data_json
+
+
+# Process data to create marker points for the frontend
 
 
 def make_points():
@@ -139,7 +143,7 @@ def make_points():
 
     data_by_country = data["countries"]
 
-    with open("countries.json", "r") as infile:
+    with open("./data/countries.json", "r") as infile:
         point_objs = json.load(infile)
 
     for point_obj in list(point_objs):
@@ -160,11 +164,11 @@ def make_points():
 
 
 def update_points():
-    with open("points.json", "w") as outfile:
+    with open("./data/points.json", "w") as outfile:
         json.dump(make_points(), outfile)
 
 
 def get_points():
-    with open("points.json", "r") as infile:
+    with open("./data/points.json", "r") as infile:
         points_json = json.load(infile)
     return points_json
