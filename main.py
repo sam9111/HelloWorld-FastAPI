@@ -42,5 +42,5 @@ def update():
 @app.on_event("startup")
 def update_loop():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(update, "cron", hour="*/23")
+    scheduler.add_job(update, "cron", hour=23)
     scheduler.start()
