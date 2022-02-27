@@ -15,18 +15,18 @@ https://hello-world-fastapi.azurewebsites.net/
 
 #### Get all news fetched every 23 hours
 
-```http
+```
   GET /api/news
 ```
 #### Get all data processed using text analytics
 
-```http
+```
   GET /api/data
 ```
 
 #### Get all point objects being rendered as markers in the front end
 
-```http
+```
   GET /api/points
 ```
 
